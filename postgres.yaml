@@ -1,41 +1,60 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgresql
+  namespace: default
+type: Opaque
+data:
+  # 12345678
+  password: MTIzNDU2Nzg=
+---
 apiVersion: mdb.yandex-cloud.jet.crossplane.io/v1alpha1
 kind: PostgresqlCluster
 metadata:
-  labels:
-    argocd.argoproj.io/instance: postgres-prod
-  name: postgres-prod
+  name: example-pg
 spec:
   forProvider:
+    name: example-pg
+    environment: PRESTABLE
+    networkId: <your-network-id>
     config:
-      - resources:
-          - diskSize: 10
-            diskTypeId: network-ssd
-            resourcePresetId: b2.medium
-        version: '14'
+      - version: "12"
+        resources:
+          - diskSize: 16
+            diskTypeId: network-hdd
+            resourcePresetId: s2.micro
+        postgresqlConfig:
+          max_connections: "395"
+          enable_parallel_hash: "true"
+          vacuum_cleanup_index_scale_factor: "0.2"
+          autovacuum_vacuum_scale_factor: "0.34"
+          default_transaction_isolation: "TRANSACTION_ISOLATION_READ_COMMITTED"
+          shared_preload_libraries: SHARED_PRELOAD_LIBRARIES_AUTO_EXPLAIN
+    maintenanceWindow:
+      - type: WEEKLY
+        day: SAT
+        hour: 12
     database:
-      - name: todolist_prod
-        owner: todolist_prod_user
-    environment: PRODUCTION
-    folderIdRef:
-      name: default
-    host:
-      - subnetIdRef:
-          name: default-ru-central1-a
-        zone: ru-central1-a
-      - subnetIdRef:
-          name: default-ru-central1-b
-        zone: ru-central1-b
-      - subnetIdRef:
-          name: default-ru-central1-c
-        zone: ru-central1-c
-    name: postgres-prod
-    networkIdRef:
-      name: default
-    securityGroupIdsRefs:
-      - name: prod-security-group
+      - name: db_name
+        owner: user1
     user:
-      - name: todolist_prod_user
+      - name: user1
         passwordSecretRef:
+          name: postgresql
           key: password
-          name: postgres-prod-creds
-          namespace: infrastructure
+          namespace: default
+        connLimit: 50
+        permission:
+          - databaseName: db_name
+        settings:
+          default_transaction_isolation: "read committed"
+          log_min_duration_statement: "5000"
+    host:
+      - zone: ru-central1-a
+        subnetId: <your-subnet-id>
+    folderId: <your-folder-id>
+  providerConfigRef:
+    name: example
+  writeConnectionSecretToRef:
+    name: postgress-conn
+    namespace: default
