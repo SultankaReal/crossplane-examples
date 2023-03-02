@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql
+  namespace: default
+type: Opaque
+data:
+  # 12345678
+  password: MTIzNDU2Nzg=
+---
+apiVersion: mdb.yandex-cloud.jet.crossplane.io/v1alpha1
+kind: MySQLCluster
+metadata:
+  name: example-mysql
+spec:
+  forProvider:
+    name: example-mysql
+    environment: PRESTABLE
+    networkId: <your-network-id>
+    version: "8.0"
+    resources:
+      - diskSize: 16
+        diskTypeId: network-hdd
+        resourcePresetId: s2.micro    
+    maintenanceWindow:
+      - type: WEEKLY
+        day: SAT
+        hour: 12
+    database:
+      - name: db_name
+    user:
+      - name: user1
+        passwordSecretRef:
+          name: mysql
+          key: password
+          namespace: default
+        permission:
+          - databaseName: db_name
+    host:
+      - zone: ru-central1-a
+        subnetId: <your-subnet-id>
+    folderId: <your-folder-id>
+  providerConfigRef:
+    name: example
+  writeConnectionSecretToRef:
+    name: mysql-conn
+    namespace: default
