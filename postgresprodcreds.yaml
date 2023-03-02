@@ -1,0 +1,9 @@
+apiVersion: v1
+data:
+  password: ++++++++
+kind: Secret
+metadata:
+  labels:
+    argocd.argoproj.io/instance: postgres-prod
+  name: postgres-prod-creds
+  namespace: infrastructure

@@ -1,0 +1,14 @@
+apiVersion: dns.yandex-cloud.jet.crossplane.io/v1alpha1
+kind: Recordset
+metadata:
+  name: apps
+spec:
+  deletionPolicy: Orphan
+  forProvider:
+    data:
+      - 'поле-значение-для-dns-записи' # тут должен быть ip-адрес
+    name: '*.apps.kalniyazov.ga.' # поменяй на свой домен
+    ttl: 600
+    type: A
+    zoneIdRef:
+      name: yc-courses # поменяй на имя своей зоны

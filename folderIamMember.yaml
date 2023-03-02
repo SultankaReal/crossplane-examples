@@ -1,0 +1,13 @@
+apiVersion: iam.yandex-cloud.jet.crossplane.io/v1alpha1
+kind: FolderIAMMember
+metadata:
+  labels:
+    argocd.argoproj.io/instance: cluster-prod
+  name: kube-prod-editor
+spec:
+  forProvider:
+    folderIdRef:
+      name: default
+    role: editor
+    serviceAccountRef:
+      name: kube-prod

@@ -1,0 +1,41 @@
+apiVersion: mdb.yandex-cloud.jet.crossplane.io/v1alpha1
+kind: PostgresqlCluster
+metadata:
+  labels:
+    argocd.argoproj.io/instance: postgres-prod
+  name: postgres-prod
+spec:
+  forProvider:
+    config:
+      - resources:
+          - diskSize: 10
+            diskTypeId: network-ssd
+            resourcePresetId: b2.medium
+        version: '14'
+    database:
+      - name: todolist_prod
+        owner: todolist_prod_user
+    environment: PRODUCTION
+    folderIdRef:
+      name: default
+    host:
+      - subnetIdRef:
+          name: default-ru-central1-a
+        zone: ru-central1-a
+      - subnetIdRef:
+          name: default-ru-central1-b
+        zone: ru-central1-b
+      - subnetIdRef:
+          name: default-ru-central1-c
+        zone: ru-central1-c
+    name: postgres-prod
+    networkIdRef:
+      name: default
+    securityGroupIdsRefs:
+      - name: prod-security-group
+    user:
+      - name: todolist_prod_user
+        passwordSecretRef:
+          key: password
+          name: postgres-prod-creds
+          namespace: infrastructure
