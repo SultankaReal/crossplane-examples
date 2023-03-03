@@ -1,27 +1,24 @@
 apiVersion: kubernetes.yandex-cloud.jet.crossplane.io/v1alpha1
 kind: NodeGroup
 metadata:
-  labels:
-    argocd.argoproj.io/instance: cluster-prod
-  name: kube-prod-nodegroup-0
+  name: kube-prod-new-nodegroup-0
 spec:
   forProvider:
     allocationPolicy:
       - location:
           - zone: ru-central1-a
-    clusterIdRef:
-      name: kube-prod
+    clusterId: <cluster-id>
     instanceTemplate:
       - bootDisk:
           - size: 64
             type: network-hdd
         networkInterface:
           - nat: true
-            securityGroupIdsRefs:
-              - name: prod-security-group
-            subnetIdsRefs:
-              - name: default-ru-central1-a
-        platformId: standard-v2
+            securityGroupIds: 
+              - <sg-id>
+            subnetIds: 
+              - <subnet-id>
+        platformId: standard-v3
         resources:
           - cores: 2
             memory: 2
@@ -41,3 +38,5 @@ spec:
             max: 5
             min: 1
     version: '1.21'
+  providerConfigRef:
+    name: example

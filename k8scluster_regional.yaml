@@ -1,0 +1,24 @@
+apiVersion: kubernetes.yandex-cloud.jet.crossplane.io/v1alpha1
+kind: Cluster
+metadata:
+  name: kube-prod-new
+spec:
+  forProvider:
+    clusterIpv4Range: 10.113.0.0/16
+    folderId: <folder-id>
+    master:
+      - publicIp: true
+        regional:
+          - region: ru-central1
+        securityGroupIds: 
+          - <sg-id>
+        version: '1.21'
+    name: kube-prod-new
+    networkId: <network-id>
+    networkPolicyProvider: CALICO
+    nodeServiceAccountId: <node-sa-id>
+    releaseChannel: STABLE
+    serviceAccountId: <sa-id>
+    serviceIpv4Range: 10.97.0.0/16
+  providerConfigRef:
+    name: example

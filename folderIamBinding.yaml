@@ -1,12 +1,12 @@
 apiVersion: iam.yandex-cloud.jet.crossplane.io/v1alpha1
 kind: FolderIAMBinding
 metadata:
-  name: registry-pusher-1995 # укажи своё название
+  name: admin-1998 # укажи своё название
 spec:
   deletionPolicy: Orphan
   forProvider:
-    folderIdRef:
-      name: default
-    role: container-registry.images.pusher # укажи требуемую роль
-    serviceAccountsRef:
-      - name: registry-pusher-1995 # укажи здесь свой сервисный аккаунт
+    folderId: <your-folder-id>
+    role: admin # укажи требуемую роль
+    members: ["serviceAccount:<sa-id>"]
+  providerConfigRef:
+    name: example

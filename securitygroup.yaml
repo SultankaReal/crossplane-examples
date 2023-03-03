@@ -1,9 +1,7 @@
 apiVersion: vpc.yandex-cloud.jet.crossplane.io/v1alpha1
 kind: SecurityGroup
 metadata:
-  labels:
-    argocd.argoproj.io/instance: infra-yc
-  name: prod-security-group
+  name: new-security-group
 spec:
   forProvider:
     egress:
@@ -13,8 +11,7 @@ spec:
         toPort: 65535
         v4CidrBlocks:
           - 0.0.0.0/0
-    folderIdRef:
-      name: default
+    folderId: <your-folder-id>
     ingress:
       - description: rule-https
         port: 443
@@ -46,6 +43,7 @@ spec:
           - 10.0.0.0/8
           - 192.168.0.0/16
           - 172.16.0.0/12
-    name: prod
-    networkIdRef:
-      name: default
+    name: new
+    networkId: <your-network-id>
+  providerConfigRef:
+    name: example

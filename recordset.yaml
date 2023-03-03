@@ -6,9 +6,10 @@ spec:
   deletionPolicy: Orphan
   forProvider:
     data:
-      - 'поле-значение-для-dns-записи' # тут должен быть ip-адрес
-    name: '*.apps.kalniyazov.ga.' # поменяй на свой домен
+      - '<ip-address>' # тут должен быть ip-адрес
+    name: '*.apps.pushka.ga.' # поменяй на свой домен
     ttl: 600
     type: A
-    zoneIdRef:
-      name: yc-courses # поменяй на имя своей зоны
+    zoneId: <zone-id> # поменяй на имя своей зоны
+  providerConfigRef:
+    name: example
